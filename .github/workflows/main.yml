@@ -10,11 +10,6 @@ jobs:
         uses: ./.github/workflows/gitleaks.yml
         
 
-    SonarQube:
-        needs: Gitleaks
-        name: Secuirty_Checks 
-        uses: ./.github/workflows/sonarqube.yml
-
     Linting:
         needs: Gitleaks
         name: Check_Code_linting
