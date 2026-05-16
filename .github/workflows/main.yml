@@ -21,10 +21,5 @@ jobs:
         uses: ./.github/workflows/linting.yml
     
 
-    Build_and_Push:
-        
-        name: Docker Build and Push
-        uses: ./.github/workflows/Docker_build_push.yml
-        secrets: inherit
-        
+    
     
