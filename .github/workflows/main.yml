@@ -16,7 +16,7 @@ jobs:
         uses: ./.github/workflows/sonarqube.yml
 
     Linting:
-        needs: SonarQube
+        needs: Gitleaks
         name: Check_Code_linting
         uses: ./.github/workflows/linting.yml
     
