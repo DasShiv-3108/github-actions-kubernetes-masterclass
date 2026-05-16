@@ -1,74 +1,75 @@
-name: Frontend code linting
+name: Code Quality
 
 on:
   workflow_call:
-  #workflow_dispatch:
 
 jobs:
-   Code_Quality:
+
+  frontend_lint:
+    name: Frontend Linting
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: frontend
+
+    steps:
+      - name: Code Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Check HTML
+        run: npx htmlhint "**/*.html"
+
+      - name: Check CSS
+        run: npx stylelint "**/*.css"
+
+      - name: Check JavaScript
+        run: npx eslint "**/*.js"
+
+  backend_lint:
+    name: Backend Linting
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: backend
+
+    steps:
+      - name: Code Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.24'
+          cache: true
+
+      - name: Run golangci-lint
+        uses: golangci/golangci-lint-action@v8
+        with:
+          working-directory: backend
+          version: latest
+
+  dockerfile_lint:
+    name: Dockerfile Validation
     runs-on: ubuntu-latest
 
     strategy:
       matrix:
-        service: [frontend,backend]
+        dockerfile:
+          - frontend/Dockerfile
+          - backend/Dockerfile
 
     steps:
+      - name: Code Checkout
+        uses: actions/checkout@v4
 
-        - name: Code Checkout
-          uses: actions/checkout@v6
-        
-
-        - name: Setup Node.js
-          uses: actions/setup-node@v6
-          with:
-            node-version: 25
-
-        - name: Install Dependencies
-          run: npm install --save-dev jsonlint eslint stylelint htmlhint stylelint-config-standard
-          working-directory: ./${{ matrix.service }}
-
-        - name: Check HTML
-          if: matrix.service == 'frontend'
-          run: npx htmlhint "public/**/*.html"
-          working-directory: ./${{ matrix.service }}
-
-        - name: Check CSS
-          if: matrix.service == 'frontend'
-          run: npx stylelint "public/css/**/*.css"
-          working-directory: ./${{ matrix.service }}
-
-        - name: Check JS
-          if: matrix.service == 'frontend'
-          run: npx eslint "public/js/**/*.js"
-          working-directory: ${{ matrix.service }}
-
-# Backend Code linting with eslint and jsonlint
-
-        - name: Check js
-          if: matrix.service == 'backend'
-          run: npx eslint "./*.js"
-          working-directory: ./${{ matrix.service }}
-
-        - name: Check json
-          if: matrix.service == 'backend'
-          run: npx jsonlint "./package.json"
-          working-directory: ./${{ matrix.service }}
-          
-   validate_dockerfile:
-        runs-on: ubuntu-latest
-
-        strategy:
-            matrix:
-                dockerfile:
-                    - frontend/Dockerfile
-                    - backend/Dockerfile
-
-        steps:
-
-            - name: Code Checkout
-              uses: actions/checkout@v6
-
-            - name: Validate Dockerfile
-              uses: hadolint/hadolint-action@v3.3.0
-              with:
-                dockerfile: ./${{ matrix.dockerfile }}
+      - name: Validate Dockerfile
+        uses: hadolint/hadolint-action@v3.1.0
+        with:
+          dockerfile: ${{ matrix.dockerfile }}
