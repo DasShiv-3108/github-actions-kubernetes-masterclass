@@ -28,7 +28,7 @@ jobs:
           context: ./${{ matrix.service }}
           push: false
           tags: |
-            ${{ secrets.DOCKERHUB_USER }}/${{ matrix.service }}-SkillPulse:latest
+            ${{ secrets.DOCKERHUB_USER }}/${{ matrix.service }}-skillpulse:latest
 
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@v0.36.0
@@ -46,5 +46,5 @@ jobs:
           context: ./${{ matrix.service }}
           push: true
           tags: |
-            ${{ secrets.DOCKERHUB_USER }}/${{ matrix.service }}-SkillPulse:latest
-            ${{ secrets.DOCKERHUB_USER }}/${{ matrix.service }}-SkillPuslse:latest
+            ${{ secrets.DOCKERHUB_USER }}/${{ matrix.service }}-skillpulse:latest
+            ${{ secrets.DOCKERHUB_USER }}/${{ matrix.service }}-skillpulse:latest
