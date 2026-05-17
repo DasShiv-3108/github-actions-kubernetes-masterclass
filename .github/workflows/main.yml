@@ -20,4 +20,4 @@ jobs:
         needs: Linting
         name: Docker_Build_Push
         uses: ./.github/workflows/docker_Build_Push.yml
-    
+        secrets: inherit
