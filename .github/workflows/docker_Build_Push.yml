@@ -31,15 +31,13 @@ jobs:
           tags: |
               ${{ vars.DOCKERHUB_USERNAME }}/${{ matrix.service }}-skillpulse:latest
 
-      - name: Run Trivy vulnerability scanner
-        uses: aquasecurity/trivy-action@v0.36.0
+      - name: Trivy Scan
+        uses: aquasecurity/trivy-action@0.33.1
         with:
-          image-ref: 'docker.io/my-organization/my-app:${{ github.sha }}'
-          format: 'table'
-          exit-code: '1'
-          ignore-unfixed: true
-          vuln-type: 'os,library'
-          severity: 'CRITICAL,HIGH'
+          image-ref: ${{ vars.DOCKERHUB_USERNAME }}/${{ matrix.service }}-skillpulse:latest
+          format: table
+          exit-code: 1
+          severity: CRITICAL,HIGH
 
       - name: Push Docker Image
         uses: docker/build-push-action@v7
