@@ -17,7 +17,7 @@ jobs:
     
 
     Docker_Build_Push:
-        needs: Gitleaks
+        needs: Linting
         name: Docker_Build_Push
         uses: ./.github/workflows/docker_Build_Push.yml
     
