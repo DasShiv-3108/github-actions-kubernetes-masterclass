@@ -3,12 +3,9 @@ FROM golang:1.25-alpine AS builder
 
 WORKDIR /app
 
-COPY go.mod go.sum ./
-
-# Auto fix dependencies
-RUN go mod tidy && go mod download
-
 COPY . .
+
+RUN go mod tidy
 
 RUN CGO_ENABLED=0 go build -ldflags="-s -w" -o skillpulse .
 
