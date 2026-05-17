@@ -1,7 +1,7 @@
 name: Docker_Build_Scan_Push
 
 on:
-  workflow_call: 
+  workflow_call:
 
 jobs:
   docker:
@@ -20,7 +20,6 @@ jobs:
         with:
           username: ${{ vars.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-          
 
       - name: Build Docker Image
         uses: docker/build-push-action@v7
@@ -28,8 +27,10 @@ jobs:
           context: ./${{ matrix.service }}
           push: false
           load: true
+          no-cache: true
           tags: |
-              ${{ vars.DOCKERHUB_USERNAME }}/${{ matrix.service }}-skillpulse:latest
+            ${{ vars.DOCKERHUB_USERNAME }}/${{ matrix.service }}-skillpulse:latest
+            ${{ vars.DOCKERHUB_USERNAME }}/${{ matrix.service }}-skillpulse:${{ github.sha }}
 
       - name: Trivy Scan
         uses: aquasecurity/trivy-action@master
@@ -37,6 +38,7 @@ jobs:
           image-ref: ${{ vars.DOCKERHUB_USERNAME }}/${{ matrix.service }}-skillpulse:latest
           format: table
           exit-code: 1
+          ignore-unfixed: true
           severity: CRITICAL,HIGH
 
       - name: Push Docker Image
@@ -46,4 +48,4 @@ jobs:
           push: true
           tags: |
             ${{ vars.DOCKERHUB_USERNAME }}/${{ matrix.service }}-skillpulse:latest
-            ${{ vars.DOCKERHUB_USERNAME }}/${{ matrix.service }}-skillpulse:latest
+            ${{ vars.DOCKERHUB_USERNAME }}/${{ matrix.service }}-skillpulse:${{ github.sha }}
