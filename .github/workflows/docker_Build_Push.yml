@@ -22,7 +22,7 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Build Docker Image
-        uses: docker/build-push-action@v7
+        uses: docker/build-push-action@v7.1.0
         with:
           context: ./${{ matrix.service }}
           push: false
@@ -40,7 +40,7 @@ jobs:
           severity: 'CRITICAL,HIGH'
 
       - name: Push Docker Image
-        uses: docker/build-push-action@v7
+        uses: docker/build-push-action@v7.1.0
         with:
           context: ./${{ matrix.service }}
           push: true
